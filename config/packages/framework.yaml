@@ -16,6 +16,19 @@ framework:
     #fragments: true
     php_errors:
         log: true
+    
+    http_client:
+        scoped_clients:
+            twilioApiClient:
+                base_uri: 'https://api.twilio.com'
+                auth_basic: '%twilio.account_sid%:%twilio.auth_token%'
+                
+            vonageApiClient:
+                base_uri: 'https://rest.nexmo.com'
+                auth_basic: '%vonage.api_key%:%vonage.api_secret%'
+                
+            pushyApiClient:
+                base_uri: 'https://api.pushy.me'
 
 when@test:
     framework:

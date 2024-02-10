@@ -1,0 +1,20 @@
+monolog:
+    channels: ['provider', 'notification']
+
+
+when@dev:
+    monolog:
+        handlers:
+            provider:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%_provider.log"
+                level: debug
+                channels: ["provider"]
+            notification:
+                type: stream
+                path: "%kernel.logs_dir%/%kernel.environment%_notification.log"
+                level: debug
+                channels: [ "notification" ]
+            console:
+                type: console
+                channels: ~

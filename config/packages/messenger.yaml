@@ -11,7 +11,93 @@ framework:
             # async: '%env(MESSENGER_TRANSPORT_DSN)%'
             # failed: 'doctrine://default?queue_name=failed'
             # sync: 'sync://'
+            async_sms_transport:
+                dsn: '%env(RABBITMQ_TRANSPORT_DSN)%'
+                failure_transport: async_sms_transport_failed
+                options:
+                    exchange:
+                        name: async_sms_exchange
+                        type: direct
+                    queues:
+                        async_sms: ~
+                retry_strategy:
+                    max_retries: 5
+                    delay: 15000
+                    multiplier: 2
+                    
+            async_sms_transport_failed:
+                dsn: '%env(RABBITMQ_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: async_sms_exchange_failed
+                        type: direct
+                    queues:
+                        async_sms_failed:
+                            binding_keys: [ 'async_sms' ]
+                retry_strategy:
+                    max_retries: 5
+                    delay: 15000
+                    multiplier: 2
+                    
+            async_push_transport:
+                dsn: '%env(RABBITMQ_TRANSPORT_DSN)%'
+                failure_transport: async_push_transport_failed
+                options:
+                    exchange:
+                        name: async_push_exchange
+                        type: direct
+                    queues:
+                        async_push: ~
+                retry_strategy:
+                    max_retries: 5
+                    delay: 15000
+                    multiplier: 2
+
+            async_push_transport_failed:
+                dsn: '%env(RABBITMQ_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: async_push_exchange_failed
+                        type: direct
+                    queues:
+                        async_push_failed:
+                            binding_keys: [ 'async_push' ]
+                retry_strategy:
+                    max_retries: 5
+                    delay: 15000
+                    multiplier: 2
+                    
+            async_email_transport:
+                dsn: '%env(RABBITMQ_TRANSPORT_DSN)%'
+                failure_transport: async_email_transport_failed
+                options:
+                    exchange:
+                        name: async_email_exchange
+                        type: direct
+                    queues:
+                        async_email: ~
+                retry_strategy:
+                    max_retries: 5
+                    delay: 15000
+                    multiplier: 2
+
+            async_email_transport_failed:
+                dsn: '%env(RABBITMQ_TRANSPORT_DSN)%'
+                options:
+                    exchange:
+                        name: async_email_exchange_failed
+                        type: direct
+                    queues:
+                        async_email_failed:
+                            binding_keys: [ 'async_email' ]
+                retry_strategy:
+                    max_retries: 5
+                    delay: 15000
+                    multiplier: 2
 
         routing:
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
+            'App\NotificationPublisher\Domain\Command\SmsNotificationCommand': async_sms_transport
+            'App\NotificationPublisher\Domain\Command\PushNotificationCommand': async_push_transport
+            'App\NotificationPublisher\Domain\Command\EmailNotificationCommand': async_email_transport

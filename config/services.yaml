@@ -4,6 +4,16 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    twilio.account_sid: '%env(TWILIO_ACCOUNT_SID)%'
+    twilio.auth_token: '%env(TWILIO_AUTH_TOKEN)%'
+    twilio.api_url: '%env(TWILIO_API_URL)'
+    
+    vonage.api_key: '%env(VONAGE_API_KEY)%'
+    vonage.api_secret: '%env(VONAGE_API_SECRET)%'
+    
+    pushy.secret_api_key: '%env(PUSHY_API_SECRET)%'
+    
+    mailtrap.api_key: '%env(MAILTRAP_API_KEY)%'
 
 services:
     # default configuration for services in *this* file
@@ -22,3 +32,67 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
+    
+    TestingConsoleCommand:
+        class: App\NotificationPublisher\Application\Command\TestingConsoleCommand
+        arguments:
+            - '@AllChannelsNotificationSender'
+                
+    AllChannelsNotificationSender:
+        class: App\NotificationPublisher\Application\Service\NotificationSender
+        calls:
+            - addChannel: [ '@SmsNotificationChannel' ]
+            - addChannel: [ '@PushNotificationChannel' ]
+            - addChannel: [ '@EmailNotificationChannel' ]
+              
+    SmsNotificationChannel:
+        class: App\NotificationPublisher\Application\Channel\SmsNotificationChannel
+        
+    PushNotificationChannel:
+        class: App\NotificationPublisher\Application\Channel\PushNotificationChannel
+        
+    EmailNotificationChannel:
+        class: App\NotificationPublisher\Application\Channel\EmailNotificationChannel
+        
+    TwilioProvider:
+        class: App\NotificationPublisher\Application\Provider\TwilioProvider
+        arguments:
+            - '%env(SMS_SENDER_NUMBER)%'
+            - '%twilio.account_sid%'
+    
+    VonageProvider:
+        class: App\NotificationPublisher\Application\Provider\VonageProvider
+        arguments:
+            - '%env(SMS_SENDER_NUMBER)%'
+        
+    App\NotificationPublisher\Application\CommandHandler\SmsNotificationCommandHandler:
+        calls:
+            - addProvider: [ '@TwilioProvider' ]
+            - addProvider: [ '@VonageProvider' ]
+              
+    PushyProvider:
+        class: App\NotificationPublisher\Application\Provider\PushyProvider
+        arguments:
+            - '%pushy.secret_api_key%'
+              
+    App\NotificationPublisher\Application\CommandHandler\PushNotificationCommandHandler:
+        calls:
+            - addProvider: [ '@PushyProvider' ]
+              
+    Mailtrap\Config:
+        arguments:
+            - '%mailtrap.api_key%'
+              
+    Mailtrap\MailtrapClient:
+        arguments:
+            - '@Mailtrap\Config'
+              
+    MailtrapProvider:
+        class: App\NotificationPublisher\Application\Provider\MailtrapProvider
+        arguments:
+            - '@Mailtrap\MailtrapClient'
+            - '%env(SENDER_EMAIL)%'
+                
+    App\NotificationPublisher\Application\CommandHandler\EmailNotificationCommandHandler:
+        calls:
+            -   addProvider: [ '@MailtrapProvider' ]
