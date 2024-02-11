@@ -1,3 +1,5 @@
+Everything is done in provided docker environment, so just build an image and you are ready to go.
+
 Publishing notifies is done by NotificationPublisher class.
 
 As arguments, it takes simple Notification object and an array of Users.
@@ -14,6 +16,6 @@ For every channel there are message handlers (consumers) which can have multiple
 
 Usage tracking is done by logging to files (see config/packages/monolog.yaml), but it can be easily expanded to log aggregators or database logging. To see logs visit var/logs catalog.
 
-I used few notification services (Twilio, Vonage, Pushy, Mailtrap) but unfortunately didn't have time to set up an account, fully configure every one of them and test it in testing environment, so they might not work, but I tried to be consistent with documentation they provide and hopefully configured it right. You can edit .env file and provide your own api keys.
+I used few notification services (Twilio, Vonage, Pushy, Mailtrap) but unfortunately didn't have time to set up an account, fully configure every one of them and test it in testing environment, so they might not work, but I tried to be consistent with documentation they provide and hopefully configured it right. You can edit .env file and provide your own api keys. You can use bin/console app:test to run TestingConsoleCommand and publish some messages and then consume it with bin/console messenger:consume (but in that part providers can fail because lack of testing).
 
 Also run out of time to do integration testing, I've done just a scratch to show what it would look like.
