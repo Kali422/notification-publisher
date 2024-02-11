@@ -14,13 +14,19 @@ class TwilioResponseParserTest extends TestCase
     {
         $expected = new TwilioProviderResponse(
             'sid',
-            new DateTimeImmutable('2020-01-01'),
-            new DateTimeImmutable('2020-01-02'),
+            DateTimeImmutable::createFromFormat('D, d M Y H:i:s O', 'Thu, 24 Aug 2023 05:01:45 +0000'),
+            DateTimeImmutable::createFromFormat('D, d M Y H:i:s O', 'Thu, 24 Aug 2023 05:01:45 +0000'),
             null,
             null
         );
-        $json = json_encode(['sid' => 'sid', 'date_created' => '2020-01-01', 'date_send' => '2020-01-02'],
-            JSON_THROW_ON_ERROR);
+        $json = json_encode(
+            [
+                'sid' => 'sid',
+                'date_created' => 'Thu, 24 Aug 2023 05:01:45 +0000',
+                'date_sent' => 'Thu, 24 Aug 2023 05:01:45 +0000',
+            ],
+            JSON_THROW_ON_ERROR
+        );
 
         $parser = new TwilioResponseParser();
         self::assertEquals($expected, $parser->parseResponse($json));

@@ -1,0 +1,15 @@
+services:
+    TestNotificationPublisher:
+        class: App\NotificationPublisher\NotificationPublisher
+        calls:
+            - addChannel: [ '@SmsNotificationChannel' ]
+            - addChannel: [ '@PushNotificationChannel' ]
+        public: true
+
+    TwilioProvider:
+        class: App\NotificationPublisher\Application\Provider\TwilioProvider
+        public: true
+        
+    VonageProvider:
+        class: App\NotificationPublisher\Application\Provider\VonageProvider
+        public: true

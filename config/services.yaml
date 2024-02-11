@@ -10,8 +10,10 @@ parameters:
     
     vonage.api_key: '%env(VONAGE_API_KEY)%'
     vonage.api_secret: '%env(VONAGE_API_SECRET)%'
+    vonage.api_url: '%env(VONAGE_API_URL)%'
     
     pushy.secret_api_key: '%env(PUSHY_API_SECRET)%'
+    pushy.api_url: '%env(PUSHY_API_URL)%'
     
     mailtrap.api_key: '%env(MAILTRAP_API_KEY)%'
 
@@ -36,10 +38,10 @@ services:
     TestingConsoleCommand:
         class: App\NotificationPublisher\Application\Command\TestingConsoleCommand
         arguments:
-            - '@AllChannelsNotificationSender'
+            - '@AllChannelsNotificationPublisher'
                 
-    AllChannelsNotificationSender:
-        class: App\NotificationPublisher\Application\Service\NotificationSender
+    AllChannelsNotificationPublisher:
+        class: App\NotificationPublisher\NotificationPublisher
         calls:
             - addChannel: [ '@SmsNotificationChannel' ]
             - addChannel: [ '@PushNotificationChannel' ]
@@ -95,4 +97,4 @@ services:
                 
     App\NotificationPublisher\Application\CommandHandler\EmailNotificationCommandHandler:
         calls:
-            -   addProvider: [ '@MailtrapProvider' ]
+            - addProvider: [ '@MailtrapProvider' ]

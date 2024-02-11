@@ -20,8 +20,8 @@ class TwilioResponseParser implements ResponseParserInterface
 
         return new TwilioProviderResponse(
             $decoded['sid'],
-            new DateTimeImmutable($decoded['date_created']) ?? null,
-            new DateTimeImmutable($decoded['date_send']) ?? null,
+            DateTimeImmutable::createFromFormat('D, d M Y H:i:s O', $decoded['date_created']),
+            DateTimeImmutable::createFromFormat('D, d M Y H:i:s O', $decoded['date_sent']),
             $decoded['error_code'] ?? null,
             $decoded['error_message'] ?? null
         );

@@ -20,15 +20,15 @@ framework:
     http_client:
         scoped_clients:
             twilioApiClient:
-                base_uri: 'https://api.twilio.com'
+                base_uri: '%twilio.api_url%'
                 auth_basic: '%twilio.account_sid%:%twilio.auth_token%'
                 
             vonageApiClient:
-                base_uri: 'https://rest.nexmo.com'
+                base_uri: '%vonage.api_url%'
                 auth_basic: '%vonage.api_key%:%vonage.api_secret%'
                 
             pushyApiClient:
-                base_uri: 'https://api.pushy.me'
+                base_uri: '%pushy.api_url%'
 
 when@test:
     framework:

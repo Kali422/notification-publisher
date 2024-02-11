@@ -1,0 +1,6 @@
+framework:
+    messenger:
+        transports:
+            async_sms_transport: 'in-memory://'
+            async_push_transport: 'in-memory://'
+            async_email_transport: 'in-memory://'

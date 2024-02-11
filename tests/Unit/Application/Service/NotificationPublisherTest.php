@@ -3,12 +3,12 @@
 namespace App\Tests\Unit\Application\Service;
 
 use App\NotificationPublisher\Application\Channel\NotificationChannelInterface;
-use App\NotificationPublisher\Application\Service\NotificationSender;
 use App\NotificationPublisher\Domain\Notification;
+use App\NotificationPublisher\NotificationPublisher;
 use App\NotificationPublisher\UserInterface\User;
 use PHPUnit\Framework\TestCase;
 
-class NotificationSenderTest extends TestCase
+class NotificationPublisherTest extends TestCase
 {
 
     public function testSend(): void
@@ -23,7 +23,7 @@ class NotificationSenderTest extends TestCase
             ->method('send')
             ->withConsecutive([$notification, $user1], [$notification, $user2]);
 
-        $sender = new NotificationSender();
+        $sender = new NotificationPublisher();
         $sender->addChannel($channel);
         $sender->send(
             $notification,

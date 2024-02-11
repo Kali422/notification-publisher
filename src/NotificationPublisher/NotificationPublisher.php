@@ -1,12 +1,12 @@
 <?php
 
-namespace App\NotificationPublisher\Application\Service;
+namespace App\NotificationPublisher;
 
 use App\NotificationPublisher\Application\Channel\NotificationChannelInterface;
 use App\NotificationPublisher\Domain\Notification;
 use App\NotificationPublisher\UserInterface\User;
 
-class NotificationSender
+class NotificationPublisher
 {
     /** @var NotificationChannelInterface[] */
     private array $channels = [];
